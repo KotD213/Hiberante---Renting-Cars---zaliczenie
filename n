@@ -1,0 +1,107 @@
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.Date;
+
+@Entity
+@Table(name = "cars")
+class Car {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String type;
+    private BigDecimal dailyRate;
+    private BigDecimal depositPercentage;
+    private int maxRentalDays;
+
+}
+
+@Entity
+@Table(name = "users")
+class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+    private int drivingExperience; // in years
+}
+
+@Entity
+@Table(name = "rentals")
+class Rental {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    private Car car;
+
+    @ManyToOne
+    private User user;
+
+    @Temporal(TemporalType.DATE)
+    private Date startDate;
+
+    @Temporal(TemporalType.DATE)
+    private Date endDate;
+
+    private boolean lateReturn;
+    private BigDecimal totalCost;
+
+}
+
+public class CarRentalService {
+    private EntityManager entityManager;
+
+    public CarRentalService(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    public void rentCar(User user, Car car, Date startDate, Date endDate) throws Exception {
+    }
+
+    public void returnCar(Rental rental) {
+    }
+
+    public BigDecimal calculateTotalCost(Rental rental) {
+        return BigDecimal.ZERO;
+    }
+
+    public void handleLateReturn(Rental rental) {
+    }
+}
+
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import javax.persistence.EntityManager;
+import java.math.BigDecimal;
+import java.util.Date;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class CarRentalServiceTest {
+
+    @Mock
+    private EntityManager entityManager;
+
+    @InjectMocks
+    private CarRentalService carRentalService;
+
+    @Test
+    void testCalculateTotalCost() {
+        User user = new User();
+        Car car = new Car();
+        Rental rental = new Rental();
+
+
+        when(entityManager.persist(rental)).thenReturn(rental);
+
+        BigDecimal totalCost = carRentalService.calculateTotalCost(rental);
+
+        assertEquals(BigDecimal.ZERO, totalCost);
+    }
+}
